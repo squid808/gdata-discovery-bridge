@@ -11,4 +11,4 @@ This project is available as-is, and is imagined primarily to serve as an additi
 Example files, instructions and additional APIs forthcoming.
 
 ### Current APIs with Discovery-Bridge Docs Available
-[(]admin_emailsettings_v1](https://developers.google.com/admin-sdk/email-settings/)
+[admin_emailsettings_v1](https://developers.google.com/admin-sdk/email-settings/)
