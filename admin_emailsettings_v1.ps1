@@ -1,4 +1,4 @@
-﻿. .\DiscoveryDocGenerator.ps1 
+﻿. ..\DiscoveryDocGenerator.ps1
 
 $Json = New-DiscoveryDocument `
     -ApiName "admin"`
@@ -15,264 +15,335 @@ Add-Scope -JsonObj $Json `
     -Description "Global scope for access to all email settings"
 
 
-#SCHEMA - use the XML Attribute Name here
+##SCHEMA - use the XML Attribute Name here
 $SchemaName = "Delegate"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string address
-Add-SchemaProperty $Json $SchemaName string delegate
-Add-SchemaProperty $Json $SchemaName string delegationId
-Add-SchemaProperty $Json $SchemaName string status
+Add-SchemaProperty $Json $SchemaName string address `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string delegate `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string delegationId `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string status `
+    -Description ""
 
 $SchemaName = "Delegates"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName array delegates -ArrayObjRef Delegate
+Add-SchemaProperty $Json $SchemaName array delegates -ArrayObjRef Delegate `
+    -Description ""
 
 $SchemaName = "Filter"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string from
-Add-SchemaProperty $Json $SchemaName string to
-Add-SchemaProperty $Json $SchemaName string subject
-Add-SchemaProperty $Json $SchemaName string hasTheWord
-Add-SchemaProperty $Json $SchemaName string doesNotHaveTheWord
-Add-SchemaProperty $Json $SchemaName boolean hasAttachment
+Add-SchemaProperty $Json $SchemaName string from `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string to `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string subject `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string hasTheWord `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string doesNotHaveTheWord `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean hasAttachment `
+    -Description ""
 
-Add-SchemaProperty $Json $SchemaName boolean shouldArchive
-Add-SchemaProperty $Json $SchemaName boolean shouldMarkAsRead
-Add-SchemaProperty $Json $SchemaName boolean shouldStar
-Add-SchemaProperty $Json $SchemaName string label
-Add-SchemaProperty $Json $SchemaName string forwardTo
-Add-SchemaProperty $Json $SchemaName boolean shouldTrash
-Add-SchemaProperty $Json $SchemaName boolean neverSpam
+Add-SchemaProperty $Json $SchemaName boolean shouldArchive `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean shouldMarkAsRead `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean shouldStar `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string label `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string forwardTo `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean shouldTrash `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean neverSpam `
+    -Description ""
 
 $SchemaName = "Forwarding"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName boolean enable
-Add-SchemaProperty $Json $SchemaName string forwardTo
-Add-SchemaProperty $Json $SchemaName string action #KEEP, ARCHIVE, DELETE, MARK_READ
+Add-SchemaProperty $Json $SchemaName boolean enable `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string forwardTo `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string action `
+    -Description "" #KEEP, ARCHIVE, DELETE, MARK_READ
 
 $SchemaName = "General"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName integer pageSize #25, 50, or 100
-Add-SchemaProperty $Json $SchemaName boolean shortcuts
-Add-SchemaProperty $Json $SchemaName boolean arrows
-Add-SchemaProperty $Json $SchemaName boolean snippets
-Add-SchemaProperty $Json $SchemaName boolean unicode
+Add-SchemaProperty $Json $SchemaName integer pageSize `
+    -Description "" #25, 50, or 100
+Add-SchemaProperty $Json $SchemaName boolean shortcuts `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean arrows `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean snippets `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean unicode `
+    -Description ""
 
 $SchemaName = "Imap"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName boolean enable
+Add-SchemaProperty $Json $SchemaName boolean enable `
+    -Description ""
 
 $SchemaName = "Label"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string label
-Add-SchemaProperty $Json $SchemaName string labelid
-Add-SchemaProperty $Json $SchemaName string unreadCount -Format uint32
-Add-SchemaProperty $Json $SchemaName string visibility
+Add-SchemaProperty $Json $SchemaName string label `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string labelid `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string unreadCount -Format uint32 `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string visibility `
+    -Description ""
 
 $SchemaName = "Labels"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName array labels -ArrayObjRef Label
+Add-SchemaProperty $Json $SchemaName array labels -ArrayObjRef Label `
+    -Description ""
 
 $SchemaName = "Language"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string language #LIST IS ON WEBSITE
+Add-SchemaProperty $Json $SchemaName string language `
+    -Description "" #LIST IS ON WEBSITE
 
 $SchemaName = "Pop"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName boolean enable
-Add-SchemaProperty $Json $SchemaName string enableFor # ALL_MAIL or MAIL_FROM_NOW_ON
-Add-SchemaProperty $Json $SchemaName string action #KEEP, ARCHIVE or DELETE
+Add-SchemaProperty $Json $SchemaName boolean enable `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string enableFor `
+    -Description "" # ALL_MAIL or MAIL_FROM_NOW_ON
+Add-SchemaProperty $Json $SchemaName string action `
+    -Description "" #KEEP, ARCHIVE or DELETE
 
 $SchemaName = "SendasAlias"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string name
-Add-SchemaProperty $Json $SchemaName string address
-Add-SchemaProperty $Json $SchemaName string replyTo
-Add-SchemaProperty $Json $SchemaName boolean makeDefault
+Add-SchemaProperty $Json $SchemaName string name `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string address `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string replyTo `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean makeDefault `
+    -Description ""
 
 $SchemaName = "SendAsAliases"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName array sendasAliases -ArrayObjRef SendasAlias
+Add-SchemaProperty $Json $SchemaName array sendasAliases -ArrayObjRef SendasAlias `
+    -Description ""
 
 $SchemaName = "Signature"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName string signature
+Add-SchemaProperty $Json $SchemaName string signature `
+    -Description ""
 
 $SchemaName = "VacationResponder"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName boolean contactsOnly
-Add-SchemaProperty $Json $SchemaName boolean domainOnly
-Add-SchemaProperty $Json $SchemaName boolean enable
-Add-SchemaProperty $Json $SchemaName string endDate -Format date
-Add-SchemaProperty $Json $SchemaName string message
-Add-SchemaProperty $Json $SchemaName string startDate -Format date
-Add-SchemaProperty $Json $SchemaName string subject
+Add-SchemaProperty $Json $SchemaName boolean contactsOnly `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean domainOnly `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName boolean enable `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string endDate -Format date `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string message `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string startDate -Format date `
+    -Description ""
+Add-SchemaProperty $Json $SchemaName string subject `
+    -Description ""
 
 $SchemaName = "WebClip"
 Add-Schema $Json $SchemaName
-Add-SchemaProperty $Json $SchemaName boolean enable
+Add-SchemaProperty $Json $SchemaName boolean enable `
+    -Description ""
 
 
 ##METHODS
+$MethodScopes = @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/")
+$MethodPrefix = "emailsettings"
+
 #DELEGATION
 $MethodName = "delegation"
 $MethodType = "delete"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/delegation/{delegateEmail}" DELETE `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/")
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/delegation/{delegateEmail}" DELETE `
+    -Scopes $MethodScopes `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 Add-MethodParam $Json $MethodName $MethodType string delegateEmail $true path -ParamOrder 3
 
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/delegation" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Delegates
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/delegation" GET `
+    -Scopes $MethodScopes -ResponseObjRef Delegates `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "insert"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/delegation" POST `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Delegate -RequestObjRef Delegate
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/delegation" POST `
+    -Scopes $MethodScopes -ResponseObjRef Delegate -RequestObjRef Delegate `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #FILTERS
 $MethodName = "filters"
 $MethodType = "insert"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/filter" POST `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -RequestObjRef Filter -ResponseObjRef Filter
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/filter" POST `
+    -Scopes $MethodScopes -RequestObjRef Filter -ResponseObjRef Filter
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #FORWARDING
 $MethodName = "forwarding"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/forwarding" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Forwarding
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/forwarding" GET `
+    -Scopes $MethodScopes -ResponseObjRef Forwarding `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/forwarding" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -RequestObjRef Forwarding -ResponseObjRef Forwarding
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/forwarding" PUT `
+    -Scopes $MethodScopes -RequestObjRef Forwarding -ResponseObjRef Forwarding `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #GENERAL
 $MethodName = "general"
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/general" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -RequestObjRef General -ResponseObjRef General
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/general" PUT `
+    -Scopes $MethodScopes -RequestObjRef General -ResponseObjRef General `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #IMAP
 $MethodName = "imap"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/imap" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Imap
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/imap" GET `
+    -Scopes $MethodScopes -ResponseObjRef Imap `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/imap" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Imap -RequestObjRef Imap
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/imap" PUT `
+    -Scopes $MethodScopes -ResponseObjRef Imap -RequestObjRef Imap `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #LABELS
 $MethodName = "labels"
 $MethodType = "delete"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/label/{labelName}" DELETE `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/")
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/label/{labelName}" DELETE `
+    -Scopes $MethodScopes `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 Add-MethodParam $Json $MethodName $MethodType string labelName $true path -ParamOrder 3
 
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/label" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Labels
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/label" GET `
+    -Scopes $MethodScopes -ResponseObjRef Labels `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "insert"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/label" POST `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Label -RequestObjRef Label
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/label" POST `
+    -Scopes $MethodScopes -ResponseObjRef Label -RequestObjRef Label `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #LANGUAGE
 $MethodName = "language"
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/language" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Language -RequestObjRef Language
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/language" PUT `
+    -Scopes $MethodScopes -ResponseObjRef Language -RequestObjRef Language `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #POP
 $MethodName = "pop"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/pop" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Pop
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/pop" GET `
+    -Scopes $MethodScopes -ResponseObjRef Pop `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/pop" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Pop -RequestObjRef Pop
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/pop" PUT `
+    -Scopes $MethodScopes -ResponseObjRef Pop -RequestObjRef Pop `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #SIGNATURE
 $MethodName = "signature"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/signature" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Signature
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/signature" GET `
+    -Scopes $MethodScopes -ResponseObjRef Signature `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/signature" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef Signature -RequestObjRef Signature
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/signature" PUT `
+    -Scopes $MethodScopes -ResponseObjRef Signature -RequestObjRef Signature `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #SENDAS ALIAS
 $MethodName = "sendasAliases"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/sendas" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef SendAsAliases
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/sendas" GET `
+    -Scopes $MethodScopes -ResponseObjRef SendAsAliases
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "insert"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/sendas" POST `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef SendasAlias -RequestObjRef SendasAlias
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/sendas" POST `
+    -Scopes $MethodScopes -ResponseObjRef SendasAlias -RequestObjRef SendasAlias `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #VACATION RESPONDER
 $MethodName = "vacationResponder"
 $MethodType = "get"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/vacation" GET `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef VacationResponder
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/vacation" GET `
+    -Scopes $MethodScopes -ResponseObjRef VacationResponder `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/vacation" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef VacationResponder -RequestObjRef VacationResponder
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/vacation" PUT `
+    -Scopes $MethodScopes -ResponseObjRef VacationResponder -RequestObjRef VacationResponder `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #WEBCLIPS
 $MethodName = "webClip"
 $MethodType = "update"
-Add-Method $Json $MethodName emailsettings $MethodType "{domain}/{userKey}/webclip" PUT `
-    -Scopes @("https://apps-apis.google.com/a/feeds/emailsettings/2.0/") -ResponseObjRef WebClip -RequestObjRef WebClip
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/{userKey}/webclip" PUT `
+    -Scopes $MethodScopes -ResponseObjRef WebClip -RequestObjRef WebClip `
+    -Description ""
 Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #FINAL
-$SourceFolder = Split-Path -parent $PSCommandPath
-$DestFile = $SourceFolder + "\admin_emailsettings_v1.json"
-Export-DiscoveryDoc $Json -ReductionFactor 16 | Out-File -FilePath $DestFile
+Export-DiscoveryDoc $Json "admin_emailsettings_v1.json" -PyGen $True

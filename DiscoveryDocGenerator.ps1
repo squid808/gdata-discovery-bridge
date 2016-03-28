@@ -19,6 +19,12 @@ namespace DocCreation
 
     public enum SchemaPropFormat
     { @byte, date, datetime, @double, int32, int64, uint32 }
+
+    public enum MethodPropType
+    { @string, integer }
+
+    public enum MethodPropFormat
+    { int32, uint32 }
 }
 "@
 
@@ -108,7 +114,7 @@ Param(
         name = $ApiName
         canonicalName = $CanonicalName
         version = $ApiVersion
-        revision = (Get-Date).ToString("YYYYmmDD")
+        revision = (Get-Date).ToString("yyyyMMdd")
         title = $Title
         description = $Description
         ownerDomain = "google.com"
@@ -234,7 +240,7 @@ Param(
     [DocCreation.ResourceType]$Method,
 
     [Parameter(Mandatory=$true)]
-    [string]$Type,
+    [DocCreation.MethodPropType]$Type,
 
     [Parameter(Mandatory=$true)]
     [string]$ParamName,    
@@ -246,7 +252,16 @@ Param(
     [DocCreation.ParameterType]$Location,
 
     [int]$ParamOrder,
-    [string]$Description = ""
+    [string]$Description = "",
+
+    [Parameter(Mandatory=$false)]
+    [DocCreation.MethodPropFormat]$Format,
+
+    [Parameter(Mandatory=$false)]
+    [Int]$Minimum,
+
+    [Parameter(Mandatory=$false)]
+    [Int]$Maximum
 
 )
 
@@ -258,11 +273,16 @@ Param(
         if ($JsonObj.resources[$Resource].methods.Contains($Method)){
 
             $ParamObj = [ordered]@{
-                type = $Type
+                type = $Type.ToString()
                 description = $Description
                 required = $IsRequired.ToString().ToLower()
-                location = $Location
             }
+
+            if ($Format) {$ParamObj["format"] = $Format}
+            if ($Minimum) {$ParamObj["minimum"] = $Minimum.ToString()}
+            if ($Maximum) {$ParamObj["maximum"] = $Maximum.ToString()}
+
+            $ParamObj["location"] = $Location
 
             $JsonObj.resources[$Resource].methods[$Method].parameters[$ParamName] = $ParamObj
 
@@ -367,6 +387,30 @@ Param(
     [psobject]$JsonObj,
 
     [Parameter(Mandatory=$true)]
+    [string]$FileName,
+
+    [Parameter(Mandatory=$true)]
+    [string]$CallingDir,
+
+    [bool]$PyGen=$false
+)
+
+    $Json = Prepare-JsonOutput $JsonObj -ReductionFactor 16
+
+    $DestFile = [System.IO.Path]::Combine($CallingDir, $FileName)
+    $Json | Out-File -FilePath $DestFile -Encoding ascii
+
+    if ($PyGen) {
+        PushTo-PythonGenerator -inputPath $DestFile
+    }
+}
+
+function Prepare-JsonOutput {
+Param(
+    [Parameter(Mandatory=$true)]
+    [psobject]$JsonObj,
+
+    [Parameter(Mandatory=$true)]
     [int]$ReductionFactor
 )
 
@@ -384,4 +428,73 @@ Param(
     $J = ($Lines -join "`r`n") -replace '{( |\r\n)+}', '{}'
 
     return $J
+}
+
+function PushTo-PythonGenerator {
+Param(
+    [Parameter(Mandatory=$true)]
+    [string]$inputPath
+)
+
+    if (Test-Path .\pygen.config){
+        $configPath = ".\pygen.config"
+    } else {
+        $configPath = "..\pygen.config"
+    }
+
+    try {
+        [xml]$config = get-content $configPath
+    } catch {
+        Write-Error "Must have a pygen.config file to continue."
+    }
+
+    $OriginalPyPath = $Env:PYTHONPATH
+
+    if (-NOT [string]::IsNullOrWhiteSpace($config.config.pythonGeneratorPath)) {
+        if (-not $Env:PYTHONPATH -eq $config.config.pythonGeneratorPath){
+            $Env:PYTHONPATH = $config.config.pythonGeneratorPath.Replace('"','')
+        }
+    } else {
+        Write-Error "The element pythonGeneratorPath must be filled out in pygen.config in order to continue."
+    }
+
+    try {
+        if (-NOT [string]::IsNullOrWhiteSpace($config.config.scriptLocation)) {
+            $script = $config.config.scriptLocation
+        } else {
+            Write-Error "The element scriptLocation must be filled out in pygen.config in order to continue."
+        }
+
+        $iArg = "--input=" + $inputPath
+
+        if ([string]::IsNullOrWhiteSpace($config.config.language))
+        {
+            Write-Warning "Language not found in pygen.config, using a default of csharp."
+            $lArg = "--language=csharp"
+        } else {
+            $lArg = "--language=" + $config.config.language
+        }
+
+        if ([string]::IsNullOrWhiteSpace($config.config.output_dir))
+        {
+            Write-Warning "Output directory not found in pygen.config, using script location."
+            $oArg = "--output_dir=" + (Get-Location)
+        } else {
+            $oArg = "--output_dir=" + $config.config.output_dir
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($config.config.language_variant)){
+            $lvArg = "--language_variant=" + $config.config.language_variant
+        } else {
+            $lvArg = "--language_variant=default"
+        }
+
+        try {
+            python $script $iArg $lArg $oArg $lvArg
+        } catch {
+            write-error "Unable to launch the APIs Client Generator."
+        }
+    } finally {
+        $Env:PYTHONPATH = $OriginalPyPath
+    }
 }
