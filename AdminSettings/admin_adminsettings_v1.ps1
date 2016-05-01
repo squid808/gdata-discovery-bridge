@@ -1,4 +1,5 @@
-﻿. ..\DiscoveryDocGenerator.ps1
+﻿Import-Module ([System.IO.Path]::Combine((get-item $PSScriptRoot ).parent.FullName,"DiscoveryDocGenerator.psm1")) `
+    -DisableNameChecking
 
 $Json = New-DiscoveryDocument `
     -ApiName "admin"`
@@ -6,7 +7,7 @@ $Json = New-DiscoveryDocument `
     -CanonicalName "adminsettings"`
     -Title "Admin Settings API"`
     -Description "Allows administrators of Google Apps domains to retrieve and change the settings of their domains."`
-    -DocLink "https://developers.google.com/admin-sdk/reports/"`
+    -DocLink "https://developers.google.com/admin-sdk/admin-settings/"`
     -BaseUrl "https://apps-apis.google.com/"`
     -BasePath "a/feeds/domain/2.0/"
 
@@ -119,155 +120,155 @@ $MethodPrefix = "adminsettings"
 #GENERAL
 $MethodName = "defaultLanguage"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/defaultLanguage" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/defaultLanguage" `
     GET -Scopes $MethodScopes -ResponseObjRef DefaultLanguage `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/defaultLanguage" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/defaultLanguage" `
     PUT -Scopes $MethodScopes -ResponseObjRef DefaultLanguage -RequestObjRef DefaultLanguage `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "organizationName"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/organizationName" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/organizationName" `
     GET -Scopes $MethodScopes -ResponseObjRef OrganizationName `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/organizationName" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/organizationName" `
     PUT -Scopes $MethodScopes -ResponseObjRef OrganizationName -RequestObjRef OrganizationName `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "maximumUsers"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/maximumNumberOfUsers" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/maximumNumberOfUsers" `
     GET -Scopes $MethodScopes -ResponseObjRef MaximumNumberOfUsers `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "currentUsers"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/general/currentNumberOfUsers" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/general/currentNumberOfUsers" `
     GET -Scopes $MethodScopes -ResponseObjRef CurrentNumberOfUsers `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #ACCOUNT
 $MethodName = "productVersion"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/edition" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/edition" `
     GET -Scopes $MethodScopes -ResponseObjRef Edition `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "customerPin"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/customerPIN" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/customerPIN" `
     GET -Scopes $MethodScopes -ResponseObjRef CustomerPin `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "creationTime"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/creationTime" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/creationTime" `
     GET -Scopes $MethodScopes -ResponseObjRef CreationTime `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "countryCode"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/countryCode" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/countryCode" `
     GET -Scopes $MethodScopes -ResponseObjRef CountryCode `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "adminSecondaryEmail"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/adminSecondaryEmail" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/adminSecondaryEmail" `
     GET -Scopes $MethodScopes -ResponseObjRef AdminSecondaryEmail `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/accountInformation/adminSecondaryEmail" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/accountInformation/adminSecondaryEmail" `
     PUT -Scopes $MethodScopes -ResponseObjRef AdminSecondaryEmail -RequestObjRef AdminSecondaryEmail `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #APPEARANCE
-$MethodName = "domainLogo"
+$MethodName = "customLogo"
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/appearance/customLogo" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/appearance/customLogo" `
     PUT -Scopes $MethodScopes -ResponseObjRef CustomLogo -RequestObjRef CustomLogo `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #VERIFICATION
 $MethodName = "mxVerificationStatus"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/verification/mx" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/verification/mx" `
     GET -Scopes $MethodScopes -ResponseObjRef MXVerificationStatus `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/verification/mx" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/verification/mx" `
     PUT -Scopes $MethodScopes -ResponseObjRef MXVerificationStatus -RequestObjRef MXVerificationStatus `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #SINGLE SIGNON
 $MethodName = "ssoSettings"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/sso/general" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/sso/general" `
     GET -Scopes $MethodScopes -ResponseObjRef SsoSettings `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/sso/general" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/sso/general" `
     PUT -Scopes $MethodScopes -ResponseObjRef SsoSettings -RequestObjRef SsoSettings `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "ssoSigningKey"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/sso/signingkey" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/sso/signingkey" `
     GET -Scopes $MethodScopes -ResponseObjRef SsoSigningKey `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/sso/signingkey" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/sso/signingkey" `
     PUT -Scopes $MethodScopes -ResponseObjRef SsoSigningKey -RequestObjRef SsoSigningKey `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #EMAIL
 $MethodName = "emailGateway"
 $MethodType = "get"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/email/gateway" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/email/gateway" `
     GET -Scopes $MethodScopes -ResponseObjRef Gateway `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/email/gateway" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/email/gateway" `
     PUT -Scopes $MethodScopes -ResponseObjRef Gateway -RequestObjRef Gateway `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 $MethodName = "emailRouting"
 $MethodType = "update"
-Add-Method $Json $MethodName $MethodPrefix $MethodType "{domainName}/emailrouting" `
+Add-Method $Json $MethodName $MethodPrefix $MethodType "{domain}/emailrouting" `
     POST -Scopes $MethodScopes -ResponseObjRef Routing -RequestObjRef Routing `
     -Description ""
-Add-MethodParam $Json $MethodName $MethodType string domainName $true path -ParamOrder 1
+Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrder 1
 
 #FINAL
-Export-DiscoveryDoc $Json "admin_adminsettings_v1.json" (Split-Path -parent $PSCommandPath) -PyGen $True
+Export-DiscoveryDoc $Json "admin_adminsettings_v1.json" $PSScriptRoot -PyGen $True

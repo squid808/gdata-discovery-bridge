@@ -275,9 +275,9 @@ Param(
             $ParamObj = [ordered]@{
                 type = $Type.ToString()
                 description = $Description
-                required = $IsRequired.ToString().ToLower()
             }
 
+            if ($IsRequired) {$ParamObj["required"] = $true}
             if ($Format) {$ParamObj["format"] = $Format}
             if ($Minimum) {$ParamObj["minimum"] = $Minimum.ToString()}
             if ($Maximum) {$ParamObj["maximum"] = $Maximum.ToString()}
@@ -346,6 +346,8 @@ Param(
 
     [DocCreation.SchemaPropFormat]$Format,
 
+    [string]$ObjectRef,
+
     [string]$ArrayObjRef
 )
 
@@ -361,10 +363,14 @@ Param(
         if ($JsonObj.schemas[$Schema].properties.Contains($Property)){
             Write-Error "Schema property already exists."
         } else {
-            $PropertyObj = [ordered]@{
-                type = $Type
-                description = $Description
+            $PropertyObj = [ordered]@{}
+
+            if ($ObjectRef) {
+                $PropertyObj['$ref'] = $ObjectRef
+            } else {
+                $PropertyObj["type"] = $Type
             }
+            $PropertyObj["description"] = $Description
 
             if ($Type -eq "array") {
                 $PropertyObj["items"] = [ordered]@{
@@ -395,17 +401,17 @@ Param(
     [bool]$PyGen=$false
 )
 
-    $Json = Prepare-JsonOutput $JsonObj -ReductionFactor 16
+    $Json = Format-JsonOutput $JsonObj -ReductionFactor 16
 
     $DestFile = [System.IO.Path]::Combine($CallingDir, $FileName)
     $Json | Out-File -FilePath $DestFile -Encoding ascii
 
     if ($PyGen) {
-        PushTo-PythonGenerator -inputPath $DestFile
+        Initialize-PythonGeneratorFromFile -inputPath $DestFile
     }
 }
 
-function Prepare-JsonOutput {
+function Format-JsonOutput {
 Param(
     [Parameter(Mandatory=$true)]
     [psobject]$JsonObj,
@@ -430,7 +436,112 @@ Param(
     return $J
 }
 
-function PushTo-PythonGenerator {
+function Run-PythonGenerator {
+Param(
+    #The path to the generate_library.py file, including the file name.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Path")]
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $PythonScriptPath,
+    
+    #The working directory for the source code used to temporarily update the PYTHONPATH environmental variable.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Path")]
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $PythonSourcePath,
+
+    #The full path to a local file to be passed to the generator.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Path")]
+    [ValidateNotNullOrEmpty()]
+    $InputFilePath,
+
+    #The name of the API to generate.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $ApiName,
+
+    #The vesrsion of the API to generate.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $ApiVersion,
+
+    #The language to output to, eg csharp
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Path")]
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $Language,
+
+    #The language varient to output to, defaults to 'default'.
+    [Parameter(Mandatory=$false,
+    ParameterSetName="Path")]
+    [Parameter(Mandatory=$false,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $LanguageVariant,
+
+    #The target path for outputting the generated files.
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Path")]
+    [Parameter(Mandatory=$true,
+    ParameterSetName="Web")]
+    [ValidateNotNullOrEmpty()]
+    $OutputDirPath
+)
+
+    $OriginalPyPath = $Env:PYTHONPATH
+
+    if ($InputFilePath) {$InputFilePathArg = "--input=$InputFilePath"}
+
+    if ($ApiName) {$ApiNameArg = "--api_name=$ApiName"}
+    if ($ApiVersion) {$ApiVersionArg = "--api_version=$ApiVersion"}
+
+    $LanguageArg = "--language=" + $Language
+
+    if ($LanguageVariant) {
+        $LanguageVariantArg = "--language_variant=$LanguageVariant"
+    } else {
+        $LanguageVariantArg = "--language_variant=default"
+    }
+
+    if (-not (Test-Path $OutputDirPath)) {
+        New-Item -ItemType Directory -Path $OutputDirPath -Force
+    }
+
+    $OutputDirPathArg = "--output_dir=" + $OutputDirPath
+
+    try {
+
+        if (-not $Env:PYTHONPATH -eq $PythonSourcePath){
+            $Env:PYTHONPATH = $PythonSourcePath
+        }
+
+        try {
+            
+            if ($PsCmdlet.ParameterSetName -eq "Path") {
+                python $PythonScriptPath $InputFilePathArg $LanguageArg $LanguageVariantArg $OutputDirPathArg
+            } else {
+                python $PythonScriptPath $ApiNameArg $ApiVersionArg $LanguageArg $LanguageVariantArg $OutputDirPathArg
+            }
+
+        } catch {
+            write-error "Unable to launch the APIs Client Generator."
+        }
+
+    } finally {
+        $Env:PYTHONPATH = $OriginalPyPath
+    }
+}
+
+function Initialize-PythonGeneratorFromFile {
 Param(
     [Parameter(Mandatory=$true)]
     [string]$inputPath
@@ -448,53 +559,40 @@ Param(
         Write-Error "Must have a pygen.config file to continue."
     }
 
-    $OriginalPyPath = $Env:PYTHONPATH
-
     if (-NOT [string]::IsNullOrWhiteSpace($config.config.pythonGeneratorPath)) {
-        if (-not $Env:PYTHONPATH -eq $config.config.pythonGeneratorPath){
-            $Env:PYTHONPATH = $config.config.pythonGeneratorPath.Replace('"','')
-        }
+        $PythonPath = $config.config.pythonGeneratorPath.Replace('"','')
     } else {
         Write-Error "The element pythonGeneratorPath must be filled out in pygen.config in order to continue."
     }
 
-    try {
-        if (-NOT [string]::IsNullOrWhiteSpace($config.config.scriptLocation)) {
-            $script = $config.config.scriptLocation
-        } else {
-            Write-Error "The element scriptLocation must be filled out in pygen.config in order to continue."
-        }
-
-        $iArg = "--input=" + $inputPath
-
-        if ([string]::IsNullOrWhiteSpace($config.config.language))
-        {
-            Write-Warning "Language not found in pygen.config, using a default of csharp."
-            $lArg = "--language=csharp"
-        } else {
-            $lArg = "--language=" + $config.config.language
-        }
-
-        if ([string]::IsNullOrWhiteSpace($config.config.output_dir))
-        {
-            Write-Warning "Output directory not found in pygen.config, using script location."
-            $oArg = "--output_dir=" + (Get-Location)
-        } else {
-            $oArg = "--output_dir=" + $config.config.output_dir
-        }
-
-        if (-not [string]::IsNullOrWhiteSpace($config.config.language_variant)){
-            $lvArg = "--language_variant=" + $config.config.language_variant
-        } else {
-            $lvArg = "--language_variant=default"
-        }
-
-        try {
-            python $script $iArg $lArg $oArg $lvArg
-        } catch {
-            write-error "Unable to launch the APIs Client Generator."
-        }
-    } finally {
-        $Env:PYTHONPATH = $OriginalPyPath
+    if (-NOT [string]::IsNullOrWhiteSpace($config.config.scriptLocation)) {
+        $script = $config.config.scriptLocation
+    } else {
+        Write-Error "The element scriptLocation must be filled out in pygen.config in order to continue."
     }
+
+    if ([string]::IsNullOrWhiteSpace($config.config.language))
+    {
+        Write-Warning "Language not found in pygen.config, using a default of csharp."
+        $language = "csharp"
+    } else {
+        $language = $config.config.language
+    }
+
+    if ([string]::IsNullOrWhiteSpace($config.config.output_dir))
+    {
+        Write-Warning "Output directory not found in pygen.config, using script location."
+        $Output = (Get-Location)
+    } else {
+        $Output = $config.config.output_dir
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($config.config.language_variant)){
+        $variant = $config.config.language_variant
+    } else {
+        $variant = "default"
+    }
+
+    Run-PythonGenerator -PythonScriptPath $script -PythonSourcePath $PythonPath -InputFilePath $inputPath `
+        -Language $language -LanguageVariant $variant -OutputDirPath $Output
 }

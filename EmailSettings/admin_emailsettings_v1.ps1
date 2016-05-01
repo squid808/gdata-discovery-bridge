@@ -1,4 +1,5 @@
-﻿. ..\DiscoveryDocGenerator.ps1
+﻿Import-Module ([System.IO.Path]::Combine((get-item $PSScriptRoot ).parent.FullName,"DiscoveryDocGenerator.psm1")) `
+    -DisableNameChecking
 
 $Json = New-DiscoveryDocument `
     -ApiName "admin"`
@@ -6,7 +7,7 @@ $Json = New-DiscoveryDocument `
     -CanonicalName "emailsettings"`
     -Title "Admin Email Settings API"`
     -Description "Enables Google partners to programmatically manipulate most user-level Google Mail settings."`
-    -DocLink "https://developers.google.com/admin-sdk/reports/"`
+    -DocLink "https://developers.google.com/admin-sdk/email-settings/"`
     -BaseUrl "https://apps-apis.google.com/"`
     -BasePath "a/feeds/emailsettings/2.0/"
 
@@ -346,4 +347,4 @@ Add-MethodParam $Json $MethodName $MethodType string domain $true path -ParamOrd
 Add-MethodParam $Json $MethodName $MethodType string userKey $true path -ParamOrder 2
 
 #FINAL
-Export-DiscoveryDoc $Json "admin_emailsettings_v1.json" -PyGen $True
+Export-DiscoveryDoc $Json "admin_emailsettings_v1.json" $PSScriptRoot -PyGen $True
